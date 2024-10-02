@@ -1,0 +1,1 @@
+from src.base_integration.contact_info.module.smb.migration import *
