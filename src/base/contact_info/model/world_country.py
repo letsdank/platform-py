@@ -37,11 +37,11 @@ class WorldCountry(db.Model):
         for key, value in data.items():
             setattr(self, key, value)
 
-    def save(self):
+    def _save(self):
         db.session.add(self)
         db.session.commit()
 
-    def delete(self, force=False):
+    def _delete(self, force=False):
         if force:
             db.session.delete(self)
         else:

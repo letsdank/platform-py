@@ -1,6 +1,8 @@
 from main import db
 from src.base.contact_info.model.contact_info_type import ContactInfoType
 from src.base.contact_info.module.management import impl as management_impl
+from src.base.contact_info.model.formula import *
+from src.base.contact_info.module.management.internal import management as management_internal
 
 # PREDEFINED
 CONTACT_INFO_PD = {
@@ -149,15 +151,49 @@ class ContactInfoView(db.Model):
             setattr(self, key, value)
 
     def save(self):
+        decline = False
+        self.before_save(decline)
+
+        if decline:
+            print('Error before_save ' + self)
+            pass
+
+        self.on_save(decline)
+        if decline:
+            print('Error on_save' + self)
+
+        self.__save()
+
+    def __save(self):
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def __delete(self):
         db.session.delete(self)
         db.session.commit()
 
     def __repr__(self):
         return '<ContactInfoView %r>' % self.name
+
+    ###############################################################
+    # PLATFORM
+
+    def before_save(self, decline: bool):
+        if self.predefined_name.startswith('_'):
+            return
+
+        if not self.is_group:
+            result = management_internal.check_contact_info_view_fields(self)
+            if result['has_errors']:
+                decline = True
+                raise result['error_text']
+            group_name = common.get_object_field_value(ContactInfoView.load(self.parent_id), 'predefined_type_name')
+            if len(group_name) == 0:
+                group_name = common.get_object_field_value(ContactInfoView.load(self.parent_id), 'predefined_name')
+
+            self.check_formula_identifier(decline)
+
+
 
 # Alias: ВидыКонтактнойИнформации.Представление
 class ContactInfoViewView(db.Model):

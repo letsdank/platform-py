@@ -243,7 +243,7 @@ def get_world_country_by_code_or_name(code_or_name: str, fill_data: dict = None)
     sec.set_privileged(True)
     country_obj = WorldCountry(None, None)
     country_obj.update(fill_data)
-    country_obj.save()
+    country_obj._save()
 
     return country_obj
 
