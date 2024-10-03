@@ -41,8 +41,11 @@ class WorldCountry(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
+    def delete(self, force=False):
+        if force:
+            db.session.delete(self)
+        else:
+            self.deleted = True
         db.session.commit()
 
     def __repr__(self):

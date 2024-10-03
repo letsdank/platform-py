@@ -1,8 +1,8 @@
 def first_method(l):
-    l.append(1)
+    l.append({'type': 'foo'})
 
 def second_method(l):
-    l.append(2)
+    l.append({'type': 'bar'})
 
 l = []
 first_method(l)

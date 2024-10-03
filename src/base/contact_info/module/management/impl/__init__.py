@@ -1,1 +1,1 @@
-from src.base.contact_info.module.management.impl import *
+from src.base.contact_info.module.management.impl.main import *
